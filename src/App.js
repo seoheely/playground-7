@@ -29,7 +29,8 @@ class App extends React.Component {
                 isDone: true
             }
         ],
-        editingId: null // 이 아이디를 넣어서 수정이 될것인지 아닌지를 구분하도록 함.
+        editingId: null, // 이 아이디를 넣어서 수정이 될것인지 아닌지를 구분하도록 함.
+        selectedFilter: 'All'
     };
 
     /**
@@ -145,11 +146,35 @@ class App extends React.Component {
         })
     };
 
+    changeFilter = filter => {
+        this.setState({
+            selectedFilter : filter
+        })
+    };
+
     render() {
         const {
             todos,
-            editingId
+            editingId,
+            selectedFilter
         } = this.state;
+
+        const completedLength = todos.filter(v => v.isDone).length;
+        const activeLength = todos.length - completedLength;
+
+        let filteredTodos;
+        switch(selectedFilter) {
+            case 'Active':
+                filteredTodos = todos.filter(v => !v.isDone);
+                break;
+            case 'Completed':
+                filteredTodos = todos.filter(v => v.isDone);
+                break;
+            case 'All':
+            default:
+                filteredTodos = todos;
+        }
+
         return (
             <div className="todo-app">
                 <Header
@@ -158,7 +183,7 @@ class App extends React.Component {
                     isAllDone={todos.every(v => v.isDone)}
                 />
                 <TodoList
-                    todos={todos} // 기본 리스트
+                    todos={filteredTodos} // 기본 리스트
                     deleteTodo={this.deleteTodo} // 리스트 삭제
                     startEdit={this.startEdit} // 수정할때 필요한 메서드
                     editingId={editingId} // 수정할때 필요한 아이디 값
@@ -167,7 +192,11 @@ class App extends React.Component {
                     toggleTodo={this.toggleTodo} // toggle 메서드를 보냄
                 />
                 <Footer
+                    shouldCompletedBtnHidden={!completedLength}
+                    activeLength={activeLength}
                     clearCompleted={this.clearCompleted} //
+                    changeFilter={this.changeFilter}
+                    selectedFilter={selectedFilter} // 메서드
                 />
             </div>
         );

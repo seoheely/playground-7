@@ -1,4 +1,5 @@
 import React from 'react';
+import ClassNames from 'classnames';
 
 class Todo extends React.Component {
     componentDidUpdate(prevProps) { // component가 업데이트 되었을때!!! prevProps값을 가져온다.
@@ -37,11 +38,23 @@ class Todo extends React.Component {
         {/*<li className={`todo-item${isEditing ? ' editing' : ''}`}>*/}
         // 이 방법은 1가지 상태 값을 넣을때 사용됨?????
         return (
-            <li className={[
+            <li className={
+                ClassNames('todo-item', {
+                    editing: isEditing,
+                    completed: isDone
+                })
+
+                /**
+                 *
+
+                [
                 'todo-item',
                 isEditing ? ' editing' : '',
                 isDone ? ' completed' : ''
-            ].join('')}>
+            ].join('')
+                 */
+            }>
+
                 <button className="toggle"
                         onClick={toggleTodo}
                 />
