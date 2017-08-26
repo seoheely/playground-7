@@ -1,4 +1,5 @@
 import React from 'react';
+import ClassNames from 'classnames';
 
 class Todo extends React.Component {
     componentDidUpdate(prevProps) {
@@ -26,11 +27,16 @@ class Todo extends React.Component {
             toggleTodo
         } = this.props;
         return (
-            <li className={[
+            /*<li className={[
                 'todo-item',
                 isEditing ? ' editing':'',
                 isDone ? ' completed':''
-            ].join('')}>
+            ].join('')}>*/
+                <li className={
+                    ClassNames('todo-item',{
+                        editing:isEditing,
+                        completed:isDone
+                })}>
                 <button
                     className="toggle"
                     onClick={toggleTodo}
