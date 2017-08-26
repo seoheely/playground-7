@@ -3,6 +3,13 @@ import Todo from './Todo';
 
 class TodoList extends React.Component {
     render() {
+		const {todos,
+			deleteTodo,
+			startEdit,
+			editingId,
+			saveTodo,
+			cancelEdit
+		} = this.props;
         return (
             <div className="todo-app__main">
                 <ul className="todo-list">
@@ -10,7 +17,11 @@ class TodoList extends React.Component {
                         <Todo
                             key={`todo#${v.id}`}
                             text={v.text}
-                            deleteTodo={() => this.props.deleteTodo(v.id)}
+                            deleteTodo={() => deleteTodo(v.id)}
+							startEdit = {() => startEdit(v.id)}
+							isEditing={editingId === v.id}
+							saveTodo={text => saveTodo(v.id, text)}
+							cancelEdit={cancelEdit}
                         />
                     ))}
                 </ul>
