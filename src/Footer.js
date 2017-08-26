@@ -12,7 +12,10 @@ class Footer extends React.Component {
                     <li><a>Active</a></li>
                     <li><a>Completed</a></li>
                 </ul>
-                <button className="todo-delete-completed">
+                <button
+                    className="todo-delete-completed"
+                    onClick = {this.props.clearCompleted}
+                >
                     Clear Completed
                 </button>
             </div>

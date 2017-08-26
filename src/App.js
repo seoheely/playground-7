@@ -9,14 +9,18 @@ class App extends React.Component {
   state = {
       todos : [{
           text: '배고파',
+          isDone: false,
           id: 1111
       },{
           text: '배고파',
+          isDone: true,
           id: 2222
       },{
           text: '배고파',
+          isDone: false,
           id: 3333
       }],
+      
       editingId: null
   };
 
@@ -60,27 +64,77 @@ class App extends React.Component {
     }
 
     cancelEdit = () => {
+        console.log('canceled');
         this.setState({
             editingId: null
         });
     }
 
+    toggleTodo = id => {
+        const newTodos = [... this.state.todos];
+        const targetIndex = newTodos.findIndex( v => v.id ===id );
+        newTodos[targetIndex] = Object.assign({}, newTodos[targetIndex], {
+            isDone: !newTodos[targetIndex].isDone
+        });
+        this.setState({
+            todos: newTodos
+        });
+    }
+
+    toggleAll = () => {
+        const newDone = this.state.todos.some( v => !v.isDone);
+        const newTodos = this.state.todos.map( v => Object.assign({}, v, {
+            isDone : newDone
+        })); // map은 새로울 배열을 만드는 것
+        this.setState({
+            todos: newTodos
+        });
+    }
+
+    clearCompleted = () => {
+        /* 완료된 애들은 지워라 === 완료되지 않은 애들은 남겨라 */
+        const newTodos = this.state.todos.filter( v => !v.isDone);
+        // 조건을 충족한 애들만으로 새로운 배열을 만들어줌
+        this.setState({
+            todos: newTodos
+        });
+    }
+
     render() {
+        const {
+            todos,
+            editingId
+        } = this.state;
+
         return (
             <div className="todo-app">
-                <Header addTodo={this.addTodo} />
+                <Header
+                    addTodo={this.addTodo}
+                    toggleAll={this.toggleAll}
+                    isAllDone = {todos.every(v => v.isDone)} //flag 하나 헤더에게 넘겨줌
+                />
                 <TodoList
-                    todos={this.state.todos}
+                    todos={todos}
                     deleteTodo={this.deleteTodo}
                     startEdit = {this.startEdit}
-                    editingId = {this.state.editingId}
+                    editingId = {editingId}
                     saveTodo = {this.saveTodo}
                     cancelEdit = {this.cancelEdit}
+                    toggleTodo = {this.toggleTodo}
                 />
-                <Footer />
+                <Footer
+                    clearCompleted = {this.clearCompleted}
+                />
             </div>
         );
     }
 }
 
 export default App;
+
+/*
+toggleAll의 기능:
+전부 true인 경우에만 false로.
+하나라도 false인 경우에는 true로.
+some()
+*/

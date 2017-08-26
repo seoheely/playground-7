@@ -10,7 +10,8 @@ class TodoList extends React.Component {
             startEdit,
             editingId,
             saveTodo,
-            cancelEdit
+            cancelEdit,
+            toggleTodo
         } = this.props;
 
         return(
@@ -20,11 +21,13 @@ class TodoList extends React.Component {
                         <Todo
                             key={`todo#${v.id}`}
                             text={v.text}
+                            isDone = {v.isDone}
                             deleteTodo={() => deleteTodo(v.id)}
                             startEdit={() => startEdit(v.id)}
                             isEditing={editingId === v.id} // boolean value
                             saveTodo = {text => saveTodo(v.id, text)}
-                            cancelEdit = {cancelEdit}
+                            cancelEdit = {cancelEdit} // 넘겨줄 필요가 없어서 arrow function 안씀
+                            toggleTodo = {() => toggleTodo(v.id)}
                         />
                     ))}
                 </ul>

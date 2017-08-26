@@ -12,6 +12,10 @@ class Header extends React.Component {
     }
 
     render(){
+        const {
+            isAllDone,
+            toggleAll
+        } = this.props;
         return(
             <header>
                 <h1 className="todo-app__header">todos</h1>
@@ -21,7 +25,10 @@ class Header extends React.Component {
                     placeholder="What needs to be done?"
                     onKeyDown={this.handleKeyDown}
                 />
-                <button className="toggle-all" />
+                <button
+                    className={`toggle-all${isAllDone ? ' checked' : ''}`}
+                    onClick = {toggleAll}
+                />
             </header>
         );
     }
