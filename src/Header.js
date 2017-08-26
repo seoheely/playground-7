@@ -21,7 +21,8 @@ import React from 'react';
  * */
 
 class Header extends React.Component {
-    //4번 방법 사용해서 this binding
+
+//4번 방법 사용해서 this binding
     handleKeyDown = e => {
         const text = e.target.value;
         if (!text || e.keyCode !== 13) {
@@ -32,6 +33,10 @@ class Header extends React.Component {
     };
 
     render() {
+        const {
+            isAllDone,
+            toggleAll
+        } = this.props;
         return (
             <header>
                 <h1 className="todo-app__header">todos</h1>
@@ -41,7 +46,10 @@ class Header extends React.Component {
                     placeholder="What needs to be done?"
                     onKeyDown={this.handleKeyDown}
                 />
-                <button className="toggle-all"/>
+                <button
+                    className={`toggle-all${isAllDone ? ' checked' : ''}`}
+                    onClick={toggleAll}
+                />
             </header>
         );
     }

@@ -10,6 +10,8 @@ class Todo extends React.Component {
 
     handleKeyDown = e => {
         const text = e.target.value;
+        // keyCode, which -> deprecated
+        // e.key = 'Enter'
         if (!text || e.keyCode !== 13) {
             return;
         }
@@ -21,16 +23,27 @@ class Todo extends React.Component {
     render() {
         const {
             text,
+            isDone,
             deleteTodo,
             startEdit,
             isEditing,
-            cancelEdit
+            cancelEdit,
+            toggleTodo
         } = this.props;
 
         return (
-            <li className={`todo-item${isEditing ? ' editing' : ''}`}>
+            <li className={
+                ['todo-item',
+                    isEditing ? ' editing' : '',
+                    isDone ? ' completed' : '',
+                ].join('')}>
+                {/*<li className={`todo-item${isEditing ? ' editing' : ''}${isDone ? ' completed' : ''}`}>*/}
                 {/*<li className="todo-item">*/}
-                <button className="toggle"/>
+                <button
+                    type="button"
+                    className="toggle"
+                    onClick={toggleTodo}
+                />
                 <div className="todo-item__view">
                     <div
                         className="todo-item__view__text"

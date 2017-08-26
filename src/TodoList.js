@@ -10,7 +10,8 @@ class TodoList extends React.Component {
             startEdit,
             editingId,
             saveTodo,
-            cancelEdit
+            cancelEdit,
+            toggleTodo
         } = this.props;
         return (
             <div className="todo-app__main">
@@ -19,11 +20,13 @@ class TodoList extends React.Component {
                         <Todo
                             key={`todo#${v.id}`}
                             text={v.text}
+                            isDone={v.isDone}
                             deleteTodo={() => deleteTodo(v.id)}
                             startEdit={() => startEdit(v.id)}
                             isEditing={editingId === v.id} //boolean 값
                             saveTodo={text => saveTodo(v.id, text)}
                             cancelEdit={cancelEdit}
+                            toggleTodo={() => toggleTodo(v.id)}
                         />
                     ))}
                 </ul>

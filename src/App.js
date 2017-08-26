@@ -19,12 +19,15 @@ class App extends React.Component {
         todos: [
             {
                 text: '배고파',
+                isDone: false,
                 id: 111
             }, {
                 text: '배고파2',
+                isDone: true,
                 id: 222
             }, {
                 text: '배고파3',
+                isDone: false,
                 id: 333
             }
         ],
@@ -75,7 +78,7 @@ class App extends React.Component {
         this.setState({
             editingId: null
         })
-    }
+    };
 
     saveTodo = (id, newText) => {
         const newTodos = [...this.state.todos];
@@ -90,24 +93,78 @@ class App extends React.Component {
             todos: newTodos,
             // editingId: null
         })
-    }
+    };
+
+    toggleTodo = id => {
+        const newTodos = [...this.state.todos];
+        const targetIndex = newTodos.findIndex(v => v.id === id);
+
+        newTodos[targetIndex] = Object.assign({}, newTodos[targetIndex], {
+            isDone: !newTodos[targetIndex].isDone
+        });
+        this.setState({
+            todos: newTodos
+        })
+    };
+
+    toggleAll = () => {
+        const newDone = this.state.todos.some(v => !v.isDone);
+        const newTodos = this.state.todos.map(v =>
+            Object.assign({}, v,
+                {isDone: newDone}
+            ));
+        this.setState({
+            todos: newTodos
+        })
+    };
+
+    clearCompleted = () => {
+        //    완료된 애들은 지워라 === 완료되지 않은 애들만 남겨라
+        const newTodos = this.state.todos.filter(v => !v.isDone);
+        this.setState({
+            todos: newTodos
+        })
+    };
 
     render() {
+        const {
+            todos,
+            editingId
+        } = this.state;
+
         return (
             <div className="todo-app">
-                <Header addTodo={this.addTodo}/>
+                <Header
+                    addTodo={this.addTodo}
+                    toggleAll={this.toggleAll}
+                    isAllDone={todos.every(v => v.isDone)}
+                />
                 <TodoList
-                    todos={this.state.todos}
+                    todos={todos}
                     deleteTodo={this.deleteTodo}
                     startEdit={this.startEdit}
-                    editingId={this.state.editingId}
+                    editingId={editingId}
                     saveTodo={this.saveTodo}
                     cancelEdit={this.cancelEdit}
+                    toggleTodo={this.toggleTodo}
                 />
-                <Footer />
+                <Footer
+                    clearCompleted={this.clearCompleted}
+                />
             </div>
         );
     }
 }
 
 export default App;
+
+/*
+ toggleAll의 기능 :
+ 전부 true인 경우에만 false로
+ 하나라도 false인 경우에는 true로
+
+ array method
+ some - or의 개념
+ every - and의 개념
+ 상황에 따라 어느 시점에 판단이 가능한지에 따라 달라집니다
+ */
