@@ -1,4 +1,5 @@
 import React from 'react';
+import ClassNames from 'classnames';
 
 class Todo extends React.Component {
     componentDidUpdate(prevProps) { // 확실한 이벤트, 렌더링 시점
@@ -32,11 +33,21 @@ class Todo extends React.Component {
         } = this.props;
 
         return (
-            <li className={
-                ['todo-item',
-                    isEditing ? ' editing' : '',
-                    isDone ? ' completed' : '',
-                ].join('')}>
+            <li
+                className={
+                    ClassNames('todo-item', {
+                        editing: isEditing,
+                        completed: isDone
+                    })
+                }
+                /*
+                 className={
+                 ['todo-item',
+                 isEditing ? ' editing' : '',
+                 isDone ? ' completed' : '',
+                 ].join('')}
+                 */
+            >
                 {/*<li className={`todo-item${isEditing ? ' editing' : ''}${isDone ? ' completed' : ''}`}>*/}
                 {/*<li className="todo-item">*/}
                 <button

@@ -31,7 +31,8 @@ class App extends React.Component {
                 id: 333
             }
         ],
-        editingId: null //수정이 진행되고있는 todo li 의 id
+        editingId: null, //수정이 진행되고있는 todo li 의 id
+        selectedFilter: 'All'
     };
 
     //text를 받아서 todos한테 하나를 push해주는 동작을 하는 메소드
@@ -126,11 +127,33 @@ class App extends React.Component {
         })
     };
 
+    changeFilter = filter => {
+        this.setState({
+            selectedFilter: filter
+        })
+    };
+
     render() {
         const {
             todos,
-            editingId
+            editingId,
+            selectedFilter
         } = this.state;
+
+        const completedLength = todos.filter(v => v.isDone).length;
+        const activeLength = todos.length - completedLength;
+
+        let filteredTodos = todos;
+        switch (selectedFilter) {
+            case 'Active':
+                filteredTodos = todos.filter(v => !v.isDone);
+                break;
+            case 'Completed':
+                filteredTodos = todos.filter(v => v.isDone);
+                break;
+            default:
+                filteredTodos = todos;
+        }
 
         return (
             <div className="todo-app">
@@ -140,7 +163,7 @@ class App extends React.Component {
                     isAllDone={todos.every(v => v.isDone)}
                 />
                 <TodoList
-                    todos={todos}
+                    todos={filteredTodos}
                     deleteTodo={this.deleteTodo}
                     startEdit={this.startEdit}
                     editingId={editingId}
@@ -149,7 +172,11 @@ class App extends React.Component {
                     toggleTodo={this.toggleTodo}
                 />
                 <Footer
+                    activeLength={activeLength}
+                    shouldCompletedBtnHidden={!completedLength}
                     clearCompleted={this.clearCompleted}
+                    selectedFilter={selectedFilter}
+                    changeFilter={this.changeFilter}
                 />
             </div>
         );

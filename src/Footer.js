@@ -1,20 +1,51 @@
 import React from 'react';
+import ClassNames from 'classnames';
 
 class Footer extends React.Component {
+    _filterlist = ['All', 'Active', 'Completed']; //내부변수임을 알리는 '_'
     render() {
+        const {
+            activeLength,
+            shouldCompletedBtnHidden,
+            clearCompleted,
+            selectedFilter,
+            changeFilter
+        } = this.props;
+
+        const links = this._filterlist.map(v => (
+            <li key={`filter_${v}`}>
+                <a
+                    className={ClassNames({
+                        selected: selectedFilter === v
+                    })}
+                    /*className={selectedFilter === v ? 'selected' : ''} */
+                    onClick={() => changeFilter(v)}
+                >{v}</a>
+            </li>
+        ));
+
         return (
             <div className="footer">
                 <span className="todo-count">
-                    0 items left
+                    <strong>{activeLength}</strong>{' '}
+                    {activeLength === 1 ? 'item ' : 'items '} left
                 </span>
                 <ul className="todo-filters">
-                    <li><a>All</a></li>
-                    <li><a>Active</a></li>
-                    <li><a>Completed</a></li>
+                    {links}
                 </ul>
                 <button
-                    className="todo-delete-completed"
-                    onClick={this.props.clearCompleted}
+                    className={ClassNames(
+                        'todo-delete-completed', {
+                            hidden: shouldCompletedBtnHidden
+                        }
+                    )}
+                    /*
+                     className={[
+                     'todo-delete-completed',
+                     shouldCompletedBtnHidden ? ' hidden' : ''
+                     ].join('')}
+                     */
+                    onClick={clearCompleted}
                 >
                     Clear Completed
                 </button>

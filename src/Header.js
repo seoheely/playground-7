@@ -1,4 +1,5 @@
 import React from 'react';
+import ClassNames from 'classnames';
 
 /*
  * 1) constructor 에서 //비추
@@ -47,7 +48,12 @@ class Header extends React.Component {
                     onKeyDown={this.handleKeyDown}
                 />
                 <button
-                    className={`toggle-all${isAllDone ? ' checked' : ''}`}
+                    className={ClassNames(
+                        'toggle-all',
+                        {
+                            checked: isAllDone
+                        })}
+                    /* className={`toggle-all${isAllDone ? ' checked' : ''}`} */
                     onClick={toggleAll}
                 />
             </header>
