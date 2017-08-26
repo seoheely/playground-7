@@ -44,6 +44,11 @@ class Header extends React.Component {
     }
 
     render() {
+        const {
+            isAllDone,
+            toggleAll
+        } = this.props;
+
         return (
             <header>
                 <h1 className="todo-app__header">todos</h1>
@@ -56,7 +61,11 @@ class Header extends React.Component {
                     // addEventListner
                     // 함수 안에서의 this 는 전역함수다.
                 />
-                <button className="toggle-all" />
+                <button
+                    //{/*className="toggle-all"*/}
+                    className={`toggle-all${isAllDone ? ' checked' : ''}`}
+                    onClick={toggleAll}
+                />
             </header>
         );
     }

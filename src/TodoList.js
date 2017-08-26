@@ -14,7 +14,8 @@ class TodoList extends React.Component {
             startEdit,
             editingId,
             saveTodo,
-            cancelEdit
+            cancelEdit,
+            toggleTodo
         } = this.props;// destructuring 을 사용하자!!
 
         return (
@@ -30,6 +31,8 @@ class TodoList extends React.Component {
                             isEditing={editingId === v.id}
                             saveTodo={text => saveTodo(v.id, text)}
                             cancelEdit={cancelEdit}
+                            toggleTodo={() => toggleTodo(v.id)}
+                            isDone={v.isDone}
                         />
                     )) }
                     {/* 밑에 있는 것들을 위의 map 으로 바꿀 수 있다 */}

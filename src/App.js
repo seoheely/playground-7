@@ -17,19 +17,16 @@ class App extends React.Component {
         todos: [
             {
                 text: '배고파',
-                id: 1
+                id: 1,
+                isDone: false
             }, {
                 text: '호호',
-                id: 2
+                id: 2,
+                isDone: false
             }, {
                 text: '하하',
-                id: 3
-            }, {
-                text: '호로롤',
-                id: 4
-            }, {
-                text: '룰루',
-                id: 5
+                id: 3,
+                isDone: true
             }
         ],
         editingId: null // 이 아이디를 넣어서 수정이 될것인지 아닌지를 구분하도록 함.
@@ -111,22 +108,92 @@ class App extends React.Component {
         })
     };
 
+    toggleTodo = id => {
+        const newTodos = [... this.state.todos];
+        const targetIndex = newTodos.findIndex(v => v.id === id); // find, findIndex값으로 index를 찾아가야함.
+        // newTodos[targetIndex].text = newText; 이 방법은 사용할 수 없음. 참조된 배열까지 값이 바뀌게 됨... state내부를 직접 바꾸는 결과가 되므로 지양하자. - 곰곰
+        newTodos[targetIndex] = Object.assign({}, newTodos[targetIndex], {
+            isDone: !newTodos[targetIndex].isDone
+        });
+        // 따라서 위와 같이 object.assign 메서드를 사용해서 새로운 값을 추가한다.
+        this.setState({
+            todos: newTodos
+        });
+    };
+    // id를 받아서 현재 상태의 isDone 상태를 수정해준다.
+
+    toggleAll = () => {
+        const newDone = this.state.todos.some(v => !v.isDone); // 뭐여?????
+        const newTodos = this.state.todos.map(v =>
+            Object.assign({}, v, {
+                isDone: newDone
+            })
+        );
+        this.setState({
+            todos: newTodos
+        });
+    };
+
+    clearCompleted = () => {
+        /**
+         * 완료된 애들은 지워라 === 완료되지 않은 애들만 남겨라.
+         */
+        const newTodos = this.state.todos.filter(v => !v.isDone);
+
+        this.setState({
+            todos: newTodos
+        })
+    };
+
     render() {
+        const {
+            todos,
+            editingId
+        } = this.state;
         return (
             <div className="todo-app">
-                <Header addTodo={this.addTodo}/>
+                <Header
+                    addTodo={this.addTodo}
+                    toggleAll={this.toggleAll}
+                    isAllDone={todos.every(v => v.isDone)}
+                />
                 <TodoList
-                    todos={this.state.todos} // 기본 리스트
+                    todos={todos} // 기본 리스트
                     deleteTodo={this.deleteTodo} // 리스트 삭제
                     startEdit={this.startEdit} // 수정할때 필요한 메서드
-                    editingId={this.state.editingId} // 수정할때 필요한 아이디 값
+                    editingId={editingId} // 수정할때 필요한 아이디 값
                     saveTodo={this.saveTodo} // 새로운 todo 저장 메서드를 보냄
                     cancelEdit={this.cancelEdit} // 수정 상태값을 없애주는 네서드를 보냄
+                    toggleTodo={this.toggleTodo} // toggle 메서드를 보냄
                 />
-                <Footer />
+                <Footer
+                    clearCompleted={this.clearCompleted} //
+                />
             </div>
         );
     }
     }
 
 export default App;
+
+/**
+ * toggleAll의 기능 :
+ * 전부 true 인 경우에만 false로
+ * 아닐경우 true로 변환
+ * >>> array.some을 사용해보자!!
+ *
+ * arr.some(v => !v) -> 일부라도 성립하면 true / 전부 성립하지 않으면 false (or 개념)
+ * arr.every(v => !v) -> 전부 성립하면 true / 일부라도 성립하지 않으면 false (and 개념)
+ *
+ * 상황에 따라, 어느 시점에 판단이 간으한지에 따라 달라집니다.
+ *
+ * 중간에 빠져 나오고 싶으면 some
+ *
+ * 배열을 처리하기 위한 필수 메서드
+ * foreach
+ * map
+ * filter
+ * every
+ * some
+ *
+ */
