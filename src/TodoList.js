@@ -6,16 +6,30 @@ class TodoList extends React.Component {
     //     super();
     //
     // }
+
     render() {
+        const {
+            todos,
+            deleteTodo,
+            startEdit,
+            editingId,
+            saveTodo,
+            cancelEdit
+        } = this.props;// destructuring 을 사용하자!!
+
         return (
             <div className="todo-app__main">
                 <ul className="todo-list">
-                    {this.props.todos.map((v) => (
+                    {todos.map((v) => (
                         <Todo
                             key={`todo#${v.id}`}
                             text={v.text}
-                            deleteTodo={() => this.props.deleteTodo(v.id)}
+                            deleteTodo={() => deleteTodo(v.id)}
                             //deleteTodo={this.props.deleteTodo}
+                            startEdit={() => startEdit(v.id)}
+                            isEditing={editingId === v.id}
+                            saveTodo={text => saveTodo(v.id, text)}
+                            cancelEdit={cancelEdit}
                         />
                     )) }
                     {/* 밑에 있는 것들을 위의 map 으로 바꿀 수 있다 */}
