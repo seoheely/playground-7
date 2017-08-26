@@ -23,7 +23,8 @@ class App extends React.Component {
             isDone: false,
             id: 123567
         }],
-        editingId: null
+        editingId: null,
+        selectedFilter: 'All'
     };
 
     addTodo = text => {
@@ -99,11 +100,35 @@ class App extends React.Component {
         });
     }
 
+    changeFilter = filter => {
+        this.setState({
+            selectedFilter: filter
+        });
+    }
+
     render() {
         const {
             todos,
-            editingId
+            editingId,
+            selectedFilter
         } = this.state;
+
+        const completedLength = todos.filter(v =>v.isDone).length;
+        const activeLength = todos.length - completedLength;
+
+        let filteredTodos;
+        switch(selectedFilter) {
+            case 'Active':
+                filteredTodos = todos.filter(v => !v.isDone);
+                break;
+            case 'Completed':
+                filteredTodos = todos.filter(v => v.isDone);
+                break;
+            case 'All':
+            default:
+                filteredTodos = todos;
+        }
+
         return (
             <div className="todo-app">
                 <Header
@@ -112,7 +137,7 @@ class App extends React.Component {
                     isAllDone={todos.every(v => v.isDone)}
                 />
                 <TodoList
-                    todos={todos}
+                    todos={filteredTodos}
                     deleteTodo={this.deleteTodo}
                     startEdit={this.startEdit}
                     editingId={editingId}
@@ -121,7 +146,11 @@ class App extends React.Component {
                     toggleTodo={this.toggleTodo}
                 />
                 <Footer
+                    activeLength={activeLength}
+                    shouldCompletedBtnHidden={!completedLength}
                     clearCompleted={this.clearCompleted}
+                    selectedFilter={selectedFilter}
+                    changeFilter={this.changeFilter}
                 />
             </div>
         );
